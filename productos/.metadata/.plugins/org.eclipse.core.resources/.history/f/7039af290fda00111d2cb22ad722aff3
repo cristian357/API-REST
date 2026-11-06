@@ -1,0 +1,10 @@
+package producto.service;
+
+import producto.model.Producto;
+
+public class ProductoApiService {
+	String url="http://localhost:8080/api";
+	
+	
+	
+}

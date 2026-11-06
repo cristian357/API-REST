@@ -1,0 +1,145 @@
+package producto.service;
+
+import java.util.List;
+
+import jakarta.ws.rs.client.Client;
+import jakarta.ws.rs.client.ClientBuilder;
+import jakarta.ws.rs.client.Entity;
+import jakarta.ws.rs.client.WebTarget;
+import jakarta.ws.rs.core.GenericType;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
+import producto.model.Producto;
+
+public class ProductoApiService {
+	String url="http://localhost:8080/api";
+	
+	public void guardarProducto(Producto p) {
+        System.out.println("Guardando producto...");
+        Client cliente = ClientBuilder.newClient();
+
+        try {
+            WebTarget webTarget = cliente.target(url).path("/producto");
+            Response response = webTarget
+                    .request(MediaType.APPLICATION_JSON)
+                    .post(Entity.entity(p, MediaType.APPLICATION_JSON));
+
+            if (response.getStatus() == Response.Status.CREATED.getStatusCode()) { // 201
+                Producto guardado = response.readEntity(Producto.class);
+                System.out.println("Producto guardado: " + guardado);
+            } else {
+                System.out.println("Error al guardar. Código: " + response.getStatus());
+            }
+        } catch (Exception e) {
+            System.out.println("Error: " + e.getMessage());
+            e.printStackTrace();
+        } finally {
+            cliente.close();
+        }
+    }
+
+    // ========== CONSULTAR UNO (GET) ==========
+    public void consultarProducto(long id) {
+        System.out.println("Consultando producto...");
+        Client cliente = ClientBuilder.newClient();
+
+        try {
+            WebTarget webTarget = cliente.target(url).path("/producto").path(String.valueOf(id));
+            Response response = webTarget.request(MediaType.APPLICATION_JSON).get();
+
+            if (response.getStatus() == Response.Status.OK.getStatusCode()) {
+                Producto producto = response.readEntity(Producto.class);
+                System.out.println("Producto encontrado: " + producto);
+            } else if (response.getStatus() == Response.Status.NOT_FOUND.getStatusCode()) {
+                System.out.println("Producto no encontrado (404)");
+            } else {
+                System.out.println("Error. Código: " + response.getStatus());
+            }
+        } catch (Exception e) {
+            System.out.println("Error: " + e.getMessage());
+            e.printStackTrace();
+        } finally {
+            cliente.close();
+        }
+    }
+
+    // ========== LISTAR TODOS (GET) ==========
+    public List<Producto>  listarProductos() {
+        System.out.println("Listando productos...");
+        Client cliente = ClientBuilder.newClient();
+
+        try {
+            WebTarget webTarget = cliente.target(url).path("/producto");
+            Response response = webTarget.request(MediaType.APPLICATION_JSON).get();
+
+            if (response.getStatus() == Response.Status.OK.getStatusCode()) {
+                List<Producto> lista = response.readEntity(new GenericType<List>() {});
+                System.out.println("Productos encontrados: " + lista.size());
+                lista.forEach(System.out::println);
+                return lista;
+            } else {
+                System.out.println("Error. Código: " + response.getStatus());
+            }
+        } catch (Exception e) {
+            System.out.println("Error: " + e.getMessage());
+            e.printStackTrace();
+        } finally {
+            cliente.close();
+        }
+       return null;
+    }
+
+    // ========== ACTUALIZAR (PUT) ==========
+    public Producto  actualizarProducto(long id, Producto p) {
+        System.out.println("Actualizando producto...");
+        Client cliente = ClientBuilder.newClient();
+
+        try {
+            WebTarget webTarget = cliente.target(url).path("/producto").path(String.valueOf(id));
+            Response response = webTarget
+                    .request(MediaType.APPLICATION_JSON)
+                    .put(Entity.entity(p, MediaType.APPLICATION_JSON));
+
+            if (response.getStatus() == Response.Status.OK.getStatusCode()) {
+                Producto actualizado = response.readEntity(Producto.class);
+                System.out.println("Producto actualizado: " + actualizado);
+                return actualizado;
+            } else if (response.getStatus() == Response.Status.NOT_FOUND.getStatusCode()) {
+                System.out.println("Producto no encontrado (404)");
+            } else {
+                System.out.println("Error. Código: " + response.getStatus());
+            }
+        } catch (Exception e) {
+            System.out.println("Error: " + e.getMessage());
+            e.printStackTrace();
+        } finally {
+            cliente.close();
+        }
+        return null;
+    }
+
+    // ========== ELIMINAR (DELETE) ==========
+    public void eliminarProducto(long id) {
+        System.out.println("Eliminando producto...");
+        Client cliente = ClientBuilder.newClient();
+
+        try {
+            WebTarget webTarget = cliente.target(url).path("/producto").path(String.valueOf(id));
+            Response response = webTarget.request().delete();
+
+            if (response.getStatus() == Response.Status.NO_CONTENT.getStatusCode()) { // 204
+                System.out.println("Producto eliminado correctamente");
+            } else if (response.getStatus() == Response.Status.NOT_FOUND.getStatusCode()) {
+                System.out.println("Producto no encontrado (404)");
+            } else {
+                System.out.println("Error al eliminar. Código: " + response.getStatus());
+            }
+        } catch (Exception e) {
+            System.out.println("Error: " + e.getMessage());
+            e.printStackTrace();
+        } finally {
+            cliente.close();
+        }
+    }
+	
+}

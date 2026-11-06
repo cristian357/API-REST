@@ -1,0 +1,62 @@
+package com.example.demo.service;
+
+import  com.example.demo.modelo.Producto;
+import com.example.demo.ProdutoRepository.ProductoRespository;
+import com.example.demo.Dto.ProductoDto;
+
+import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class ProdutoService {
+
+private ProductoRespository productoRespository;
+	
+	public ProdutoService(ProductoRespository p) {
+		productoRespository=p;
+	}
+	public ProductoDto convertToDto(Producto p) {
+		ProductoDto Dto=new ProductoDto();
+		Dto.setCodigo(p.getCodigo());
+		Dto.setDescripcion(p.getDescricion());
+		Dto.setNombre(p.getNombre());
+		Dto.setPrecio(p.getPrecio());
+		return Dto;
+	}
+	public Producto converEntity(ProductoDto Dto) {
+		Producto p=new Producto();
+		p.setCodigo(Dto.getCodigo());
+		p.setDescricion(Dto.getDescripcion());
+		p.setNombre(Dto.getNombre());
+		p.setPrecion(Dto.getPrecio());
+		return p;
+	}
+	// guardar producto
+	public ProductoDto guardarProducto(ProductoDto Dto) {
+		Producto p=converEntity(Dto);
+		Producto saveP=productoRespository.save(p);
+		return convertToDto(saveP);
+	}
+	// lista de los productos
+	public List<ProductoDto> lisProducto() {
+		List<Producto> lisProducto=productoRespository.findAll();
+		List<ProductoDto> lisDto=new ArrayList<>();
+		for (Producto p : lisProducto) {
+			
+		}
+		return lisDto;
+		
+	}
+	// buscar producto por id
+	public ProductoDto idProducto(long id) {
+		Producto buscarProducto=productoRespository.findById(id).orElse(null)
+				;
+		
+		
+	}
+	
+	
+	
+	
+}

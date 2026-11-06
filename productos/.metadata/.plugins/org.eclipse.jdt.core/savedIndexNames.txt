@@ -1,0 +1,14 @@
+INDEX VERSION 1.134+/home/che/Escritorio/tienda/productos/.metadata/.plugins/org.eclipse.jdt.core
+94776512.index
+4061777123.index
+626191062.index
+1960185207.index
+2044231840.index
+3147142500.index
+3460316424.index
+1865797976.index
+3512091403.index
+900586112.index
+2439126958.index
+3196626092.index
+945372313.index

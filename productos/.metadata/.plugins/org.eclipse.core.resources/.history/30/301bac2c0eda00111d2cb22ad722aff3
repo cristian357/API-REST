@@ -1,0 +1,5 @@
+package producto.model;
+
+public class Producto {
+
+}
